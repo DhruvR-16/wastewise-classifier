@@ -17,7 +17,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [loadingModel, setLoadingModel] = useState(true);
   const imageRef = useRef(null);
-  const [imageDetails, setImageDetails] = useState(null); 
+  const [imageDetails, setImageDetails] = useState(null); // { name, size, type, dimensions }
   const [isDragging, setIsDragging] = useState(false);
 
   // New Features State
@@ -34,7 +34,7 @@ function App() {
         console.log("Model loaded successfully");
       } catch (error) {
         console.error("Error loading model:", error);
-
+        // Handle model loading error (e.g., show an error message to the user)
       } finally {
         setLoadingModel(false);
       }
@@ -45,20 +45,22 @@ function App() {
   const processFile = (file) => {
     if (!file) return;
 
-
+    // Optional: Add file type/size validation here
+    // if (!file.type.startsWith('image/')) { ... }
+    // if (file.size > 10 * 1024 * 1024) { ... } // 10MB limit
 
     const reader = new FileReader();
     reader.onload = () => setImageSrc(reader.result);
     reader.readAsDataURL(file);
-    setResult(null); 
-    setCurrentFact(""); 
+    setResult(null); // Clear previous results when a new image is uploaded
+    setCurrentFact(""); // Clear previous fact
 
-
+    // Get image dimensions
     const img = new Image();
     img.onload = () => {
       setImageDetails({
         name: file.name,
-        size: (file.size / 1024).toFixed(2),
+        size: (file.size / 1024).toFixed(2), // size in KB
         type: file.type,
         dimensions: `${img.width} x ${img.height} px`,
       });
@@ -69,7 +71,7 @@ function App() {
   const handleImageUpload = (e) => {
     const file = e.target.files?.[0];
     processFile(file);
-
+    // Reset file input to allow uploading the same file again if needed
     if (e.target) e.target.value = null;
   };
   
@@ -152,7 +154,7 @@ function App() {
     setIsDragging(false);
     const file = e.dataTransfer.files?.[0];
     processFile(file);
-
+    // Clear the dataTransfer object
     if (e.dataTransfer.items) e.dataTransfer.items.clear(); else e.dataTransfer.clearData();
   };
 
@@ -160,18 +162,18 @@ function App() {
     e.preventDefault();
     if (!userCorrection.trim() || !result) return;
     console.log("Feedback Submitted:", {
-      originalImage: imageSrc ? imageSrc.substring(0, 50) + "..." : "N/A", 
+      originalImage: imageSrc ? imageSrc.substring(0, 50) + "..." : "N/A", // Log snippet
       aiClassification: result.className,
       userCorrection: userCorrection,
     });
-
+    // Here you would typically send this data to a backend
     setShowFeedbackForm(false);
     setUserCorrection("");
-
+    // Optionally, update history item with user feedback
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-100 via-teal-100 to-sky-200 text-slate-700 flex flex-col items-center p-4 md:p-8 selection:bg-primary/20">
+    <div className="min-h-screen bg-gradient-to-br from-sky-100 via-indigo-100 to-pink-100 text-slate-700 flex flex-col items-center p-4 md:p-8 selection:bg-primary/20">
       <header className="w-full max-w-3xl text-center py-8 md:py-12">
         <div className="flex items-center justify-center mb-4">
           <Sparkles className="h-12 w-12 md:h-16 md:w-16 text-primary mr-3 animate-pulse" />
@@ -189,8 +191,8 @@ function App() {
           ? 'max-w-6xl lg:flex-row items-start' 
           : 'max-w-xl items-center' 
       }`}>
-
-        <Card className={`w-full shadow-xl rounded-xl overflow-hidden bg-white/80 backdrop-blur-md border-gray-200/50 ${
+        {/* Left Column: Image Upload Card */}
+        <Card className={`w-full shadow-xl rounded-xl overflow-hidden bg-white/75 backdrop-blur-lg border-gray-200/50 ${
           result && !loading ? 'lg:w-3/5' : ''
         }`}>
           <CardContent className="p-6 md:p-8 space-y-6">
@@ -294,11 +296,11 @@ function App() {
           </CardContent>
         </Card>
 
-
+        {/* Right Column: Results and Facts - only shows if there's a result and not loading */}
         {result && !loading && (
           <div className="w-full lg:w-2/5 flex flex-col gap-6">
-
-            <Alert className="w-full border-primary/30 bg-primary/10 shadow-md rounded-lg">
+            {/* Classification Result */}
+            <Alert className="w-full border-primary/30 bg-primary/5 shadow-md rounded-lg">
               <CheckCircle2 className="h-5 w-5 text-primary" />
               <AlertTitle className="text-xl font-semibold text-primary mb-3">Classification Complete!</AlertTitle>
               <AlertDescription className="space-y-3 text-base text-slate-700/90">
@@ -317,8 +319,8 @@ function App() {
                     </strong>
                     <p className="mt-1 pl-1 text-slate-600/90">{result.tip}</p>
                   </div>
-                  <p className="text-xs text-slate-500/80 pt-3 italic">
-                    Disclaimer: AI-generated suggestion. Always verify with local recycling regulations.
+                  <p className="text-sm text-black-700 pt-3 italic">
+                    <strong className="font-semibold">Disclaimer:</strong> AI-generated suggestion. Always verify with local recycling regulations.
                   </p>
                   {!showFeedbackForm && (
                     <TooltipProvider>
@@ -335,7 +337,7 @@ function App() {
                     </TooltipProvider>
                   )}
                   {showFeedbackForm && (
-                    <form onSubmit={handleFeedbackSubmit} className="mt-4 space-y-3 p-4 border border-green-200/80 rounded-md bg-green-50/90">
+                    <form onSubmit={handleFeedbackSubmit} className="mt-4 space-y-3 p-4 border border-green-200/80 rounded-md bg-green-50/85">
                       <Label htmlFor="userCorrection" className="font-semibold text-sm text-slate-700">What do you think this item is?</Label>
                       <input
                         id="userCorrection"
@@ -354,9 +356,9 @@ function App() {
               </AlertDescription>
             </Alert>
 
-
+            {/* Fact Card */}
             {currentFact && (
-              <Card className="w-full bg-amber-50/90 backdrop-blur-md border border-amber-300/80 shadow-lg rounded-lg">
+              <Card className="w-full bg-amber-50/85 backdrop-blur-md border border-amber-300/80 shadow-lg rounded-lg">
                 <CardHeader className="p-4 pb-2">
                   <strong className="font-medium text-amber-700 flex items-center">
                     <Lightbulb className="h-5 w-5 mr-2 text-amber-500" />
@@ -371,7 +373,7 @@ function App() {
       </main>
 
       <footer className="fixed bottom-4 right-4 z-50">
-        <div className="bg-white/70 backdrop-blur-md shadow-lg border border-slate-200/80 rounded-full px-4 py-2">
+        <div className="bg-white/60 backdrop-blur-lg shadow-lg border border-slate-200/80 rounded-full px-4 py-2">
           <p className="text-xs text-slate-600">
             Powered by <a href="https://www.tensorflow.org/js" target="_blank" rel="noopener noreferrer" className="font-semibold text-primary hover:text-primary/80 hover:underline">TensorFlow.js</a> & <a href="https://github.com/tensorflow/tfjs-models/tree/master/mobilenet" target="_blank" rel="noopener noreferrer" className="font-semibold text-primary hover:text-primary/80 hover:underline">MobileNet</a>
           </p>
