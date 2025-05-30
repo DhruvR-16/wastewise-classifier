@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Label } from "@/components/ui/label";
 import './index.css'
-import { UploadCloud, Image as ImageIcon, Loader2, CheckCircle2, AlertTriangle, Info, Sparkles, Trash2, RotateCcw, FileText, Ratio, MessageSquareWarning, Send, Lightbulb } from "lucide-react";
+import { UploadCloud, Image as ImageIcon, Loader2, CheckCircle2, AlertTriangle, Info, Sparkles, Trash2, RotateCcw, FileText, Ratio, MessageSquareWarning, Send, Lightbulb, Github } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
@@ -173,7 +173,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-100 via-indigo-100 to-pink-100 text-slate-700 flex flex-col items-center p-4 md:p-8 selection:bg-primary/20">
+    <div className="min-h-screen bg-gradient-to-br from-sky-100 via-fuchsia-100 to-rose-100 text-slate-700 flex flex-col items-center p-4 md:p-8 selection:bg-primary/20">
       <header className="w-full max-w-3xl text-center py-8 md:py-12">
         <div className="flex items-center justify-center mb-4">
           <Sparkles className="h-12 w-12 md:h-16 md:w-16 text-primary mr-3 animate-pulse" />
@@ -181,8 +181,8 @@ function App() {
             <span className="text-primary">WasteWise</span> Classifier
           </h1>
         </div>
-        <p className="text-lg md:text-xl text-slate-600 mt-2">
-            Snap or upload an image to identify waste and get smart recycling tips.
+        <p className="text-lg md:text-xl text-slate-600 mt-2 max-w-2xl mx-auto">
+            Wondering how to dispose of an item? Upload its image, and our AI will classify it and provide recycling tips!
         </p>
       </header>
 
@@ -262,11 +262,13 @@ function App() {
                         htmlFor="picture-upload"
                         className="flex flex-col items-center justify-center w-full h-full cursor-pointer text-center p-6 space-y-2"
                       >
-                        <UploadCloud className="h-16 w-16 text-gray-400 group-hover:text-primary transition-colors" />
-                        <p className="text-lg font-medium text-slate-600 group-hover:text-primary transition-colors pointer-events-none">
-                          <span className="font-semibold text-primary">Browse files</span> or drag & drop
+                        <UploadCloud className="h-12 w-12 md:h-16 md:w-16 text-gray-400 group-hover:text-primary transition-colors" />
+                        <p className="text-xl font-semibold text-slate-700 mt-3 mb-1">Upload Your Waste Image Here</p>
+                        <p className="text-md text-slate-600 group-hover:text-primary transition-colors pointer-events-none">
+                          <span className="font-semibold text-primary">Click to browse</span> or drag & drop an image.
                         </p>
-                        <p className="text-sm text-slate-500">Supports: PNG, JPG, GIF (Max 10MB)</p>
+                        <p className="text-sm text-slate-500 mt-2">Our AI will then classify it for you!</p>
+                        <p className="text-xs text-slate-400 mt-1">Supports: PNG, JPG, GIF (Max 10MB)</p>
                       </Label>
                     )}
                   </div>
@@ -319,8 +321,8 @@ function App() {
                     </strong>
                     <p className="mt-1 pl-1 text-slate-600/90">{result.tip}</p>
                   </div>
-                  <p className="text-sm text-black-700 pt-3 italic">
-                    <strong className="font-semibold">Disclaimer:</strong> AI-generated suggestion. Always verify with local recycling regulations.
+                  <p className="text-sm text-red-600 pt-3 italic">
+                    <strong className="font-semibold text-red-700">Disclaimer:</strong> AI-generated suggestion. Always verify with local recycling regulations.
                   </p>
                   {!showFeedbackForm && (
                     <TooltipProvider>
@@ -373,11 +375,21 @@ function App() {
       </main>
 
       <footer className="fixed bottom-4 right-4 z-50">
-        <div className="bg-white/60 backdrop-blur-lg shadow-lg border border-slate-200/80 rounded-full px-4 py-2">
-          <p className="text-xs text-slate-600">
-            Powered by <a href="https://www.tensorflow.org/js" target="_blank" rel="noopener noreferrer" className="font-semibold text-primary hover:text-primary/80 hover:underline">TensorFlow.js</a> & <a href="https://github.com/tensorflow/tfjs-models/tree/master/mobilenet" target="_blank" rel="noopener noreferrer" className="font-semibold text-primary hover:text-primary/80 hover:underline">MobileNet</a>
-          </p>
-        </div>
+        <TooltipProvider delayDuration={150}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="bg-slate-700/80 hover:bg-slate-800/90 backdrop-blur-md shadow-lg border border-slate-600/50 rounded-full px-3 py-1.5 transition-colors cursor-pointer">
+                <a href="https://github.com/DhruvR-16/wastewise-classifier" target="_blank" rel="noopener noreferrer" className="flex items-center text-xs text-slate-200 hover:text-white">
+                  <Github className="h-4 w-4 mr-1.5" />
+                  View on GitHub
+                </a>
+              </div>
+            </TooltipTrigger>
+            <TooltipContent side="top" align="end" className="bg-slate-800 text-white text-xs rounded-md px-2 py-1 shadow-lg">
+              <p>Access Waste Classifier Model</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </footer>
 
     </div>
